@@ -1,0 +1,172 @@
+authentification
+creation de tournois
+page d accueil (pleins de trucs a afficher)
+BDD
+sauvegarder stat d'un tournois (taux de victoire + place moyenne + stat dans ce delire)
+
+
+
+
+
+
+
+
+Structure du projet
+Votre projet est composé de plusieurs fichiers principaux :
+
+App.js : Le point d'entrée de l'application.
+
+Tournament.js : Gère la logique du tournoi et les duels.
+
+Duel.js : Affiche un duel spécifique et permet de sélectionner un gagnant.
+
+Winner.js : Affiche le gagnant final du tournoi.
+
+Fichier par fichier
+1. App.js
+C'est le point d'entrée de votre application. Il configure les routes et détermine quel composant doit être affiché en fonction de l'URL.
+
+Ce qu'il fait :
+
+Utilise react-router-dom pour définir les routes.
+
+La route / affiche le composant Tournament.
+
+La route /winner affiche le composant Winner.
+
+La route /duel/:id est imbriquée sous / et affiche le composant Duel.
+
+Connexions :
+
+Il importe Tournament, Duel, et Winner.
+
+Il passe le contrôle à Tournament pour gérer les duels.
+
+2. Tournament.js
+Ce composant gère la logique du tournoi, y compris l'organisation des duels et le passage au tour suivant.
+
+Ce qu'il fait :
+
+Initialise les participants du tournoi.
+
+Organise les duels en paires (matchs).
+
+Redirige vers le premier duel (/duel/0) après avoir organisé les matchs.
+
+Stocke les gagnants de chaque duel.
+
+Passe au tour suivant une fois tous les duels du tour actuel terminés.
+
+Redirige vers /winner lorsqu'il ne reste qu'un seul gagnant.
+
+Connexions :
+
+Il utilise useNavigate pour rediriger vers les duels et la page du gagnant.
+
+Il passe currentRound et addWinner à Duel via Outlet.
+
+3. Duel.js
+Ce composant affiche un duel spécifique et permet à l'utilisateur de sélectionner un gagnant.
+
+Ce qu'il fait :
+
+Récupère l'identifiant du duel (id) depuis l'URL.
+
+Affiche les deux participants du duel.
+
+Permet à l'utilisateur de sélectionner un gagnant en cliquant sur un bouton.
+
+Appelle la fonction addWinner pour enregistrer le gagnant.
+
+Redirige vers le duel suivant une fois le gagnant sélectionné.
+
+Connexions :
+
+Il reçoit currentRound et addWinner de Tournament via useOutletContext.
+
+Il utilise useNavigate pour rediriger vers le duel suivant.
+
+4. Winner.js
+Ce composant affiche le gagnant final du tournoi.
+
+Ce qu'il fait :
+
+Affiche un message indiquant le gagnant du tournoi.
+
+Connexions :
+
+Il est appelé par Tournament lorsque le tournoi est terminé.
+
+Flux de l'application
+Démarrage :
+
+L'utilisateur accède à la page d'accueil (/).
+
+App.js affiche Tournament.
+
+Organisation des duels :
+
+Tournament organise les duels en paires et redirige vers le premier duel (/duel/0).
+
+Affichage des duels :
+
+Duel affiche les participants du duel et permet de sélectionner un gagnant.
+
+Une fois le gagnant sélectionné, Tournament enregistre le gagnant et redirige vers le duel suivant.
+
+Passage au tour suivant :
+
+Une fois tous les duels du tour terminés, Tournament organise un nouveau tour avec les gagnants.
+
+Le processus se répète jusqu'à ce qu'il ne reste qu'un seul gagnant.
+
+Fin du tournoi :
+
+Lorsqu'il ne reste qu'un seul gagnant, Tournament redirige vers /winner.
+
+Winner affiche le gagnant final.
+
+Résumé des connexions
+App.js :
+
+Configure les routes.
+
+Appelle Tournament pour gérer les duels.
+
+Appelle Winner pour afficher le gagnant final.
+
+Tournament.js :
+
+Organise les duels.
+
+Passe currentRound et addWinner à Duel via Outlet.
+
+Redirige vers Winner à la fin du tournoi.
+
+Duel.js :
+
+Affiche un duel spécifique.
+
+Utilise currentRound et addWinner de Tournament.
+
+Redirige vers le duel suivant.
+
+Winner.js :
+
+Affiche le gagnant final.
+
+Schéma des connexions
+Copy
+App.js
+├── Tournament.js
+│   ├── Duel.js (via Outlet)
+│   └── Winner.js (via redirection)
+└── Winner.js
+Résultat attendu
+L'application démarre sur la page d'accueil (/).
+
+Les duels sont affichés un par un, avec la possibilité de sélectionner un gagnant.
+
+Une fois tous les duels terminés, l'application passe au tour suivant.
+
+Lorsqu'il ne reste qu'un seul gagnant, l'application affiche la page du gagnant.

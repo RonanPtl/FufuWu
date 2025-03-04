@@ -5,45 +5,75 @@ const Duel = () => {
   const { duelId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const [duel, setDuel] = useState(null);
+
+  // Initialisation de l'état du tournoi
   const [tournamentState, setTournamentState] = useState(location.state || {
     rounds: [],
     currentRound: 0,
     currentDuel: 0,
   });
 
+  // État pour stocker le duel actuel
+  const [duel, setDuel] = useState(null);
+
+  // Effect pour charger les duels à chaque fois que l'état du tournoi change
   useEffect(() => {
-    // Fetch duel data based on the current state
-    const currentDuel = tournamentState.rounds[tournamentState.currentRound][tournamentState.currentDuel];
-    setDuel(currentDuel);
-  }, [duelId, tournamentState.currentRound, tournamentState.currentDuel]);
+    console.log("État du tournoi :", tournamentState);
+
+    // Vérification que les rounds existent avant d'accéder aux données
+    if (
+      tournamentState.rounds.length > 0 &&
+      tournamentState.rounds[tournamentState.currentRound] &&
+      tournamentState.rounds[tournamentState.currentRound][tournamentState.currentDuel]
+    ) {
+      setDuel(tournamentState.rounds[tournamentState.currentRound][tournamentState.currentDuel]);
+    } else {
+      setDuel(null);
+    }
+  }, [duelId, tournamentState]);
+
+  // Fonction pour randomiser les gagnants et créer le prochain round
+  const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]]; // Échange les éléments
+    }
+    return array;
+  };
 
   const selectWinner = (winner) => {
     const updatedRounds = [...tournamentState.rounds];
     updatedRounds[tournamentState.currentRound][tournamentState.currentDuel].winner = winner;
 
-    // Check if this is the last duel of the round
+    // Vérifier s'il reste des duels dans ce round
     if (tournamentState.currentDuel + 1 < updatedRounds[tournamentState.currentRound].length) {
-      // Move to the next duel in the same round
-      setTournamentState({
-        ...tournamentState,
+      // Passer au duel suivant dans le même round
+      setTournamentState((prevState) => ({
+        ...prevState,
         rounds: updatedRounds,
-        currentDuel: tournamentState.currentDuel + 1,
+        currentDuel: prevState.currentDuel + 1,
+      }));
+
+      navigate(`/duel/${parseInt(duelId) + 1}`, {
+        state: { ...tournamentState, rounds: updatedRounds, currentDuel: tournamentState.currentDuel + 1 },
       });
-      navigate(`/duel/${parseInt(duelId) + 1}`, { state: { ...tournamentState, rounds: updatedRounds, currentDuel: tournamentState.currentDuel + 1 } });
     } else {
-      // Prepare the next round with the winners
+      // Créer le prochain round avec les gagnants
+      const winners = updatedRounds[tournamentState.currentRound].map(duel => duel.winner);
+      const shuffledWinners = shuffleArray(winners); // Mélanger les gagnants pour randomiser les duels
+
       const nextRound = [];
-      for (let i = 0; i < updatedRounds[tournamentState.currentRound].length / 2; i++) {
-        nextRound.push({
-          participant1: updatedRounds[tournamentState.currentRound][2 * i].winner,
-          participant2: updatedRounds[tournamentState.currentRound][2 * i + 1].winner,
-        });
+      for (let i = 0; i < shuffledWinners.length; i += 2) {
+        if (shuffledWinners[i + 1]) {
+          nextRound.push({
+            participant1: shuffledWinners[i],
+            participant2: shuffledWinners[i + 1],
+          });
+        }
       }
 
-      // Check if there is only one winner left
+      // Vérifier si c'est le dernier duel du tournoi
       if (nextRound.length === 1) {
-        // Navigate to the winner page
         navigate('/winner', { state: { winner: nextRound[0].participant1 } });
       } else {
         setTournamentState({
@@ -51,21 +81,25 @@ const Duel = () => {
           currentRound: tournamentState.currentRound + 1,
           currentDuel: 0,
         });
-        navigate('/duel/0', { state: { rounds: [...updatedRounds, nextRound], currentRound: tournamentState.currentRound + 1, currentDuel: 0 } });
+
+        navigate('/duel/0', {
+          state: { rounds: [...updatedRounds, nextRound], currentRound: tournamentState.currentRound + 1, currentDuel: 0 },
+        });
       }
     }
   };
 
   if (!duel) {
+    console.log("Aucun duel trouvé !");
     return <div>Loading...</div>;
   }
 
   return (
     <div>
       <h1>Duel {duelId}</h1>
-      <p>{duel.participant1} vs {duel.participant2}</p>
-      <button onClick={() => selectWinner(duel.participant1)}>Select {duel.participant1}</button>
-      <button onClick={() => selectWinner(duel.participant2)}>Select {duel.participant2}</button>
+      <p>{duel.participant1.name} vs {duel.participant2.name}</p>
+      <button onClick={() => selectWinner(duel.participant1.name)}>Sélectionner {duel.participant1.name}</button>
+      <button onClick={() => selectWinner(duel.participant2.name)}>Sélectionner {duel.participant2.name}</button>
     </div>
   );
 };
