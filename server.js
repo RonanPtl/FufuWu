@@ -29,13 +29,13 @@ const Tournament = mongoose.model('Tournament', tournamentSchema);
 
 app.get('/api/tournaments', async (req, res) => {
   try {
-    const tournaments = await Tournament.find(); // Récupère tous les tournois depuis la base de données
+    const tournaments = await Tournament.find(); // Récupère tous les tournois depuis MongoDB
     res.json(tournaments);
   } catch (error) {
-    res.status(500).json({ message: "Erreur serveur", error });
+    console.error('Erreur lors de la récupération des tournois :', error);
+    res.status(500).json({ error: 'Erreur serveur lors de la récupération des tournois.' });
   }
 });
-
 
 // Route pour obtenir les tournois
 app.get('/api/tournaments/:id', async (req, res) => {
@@ -52,6 +52,28 @@ app.get('/api/tournaments/:id', async (req, res) => {
   } catch (error) {
     console.error("Erreur serveur:", error);
     res.status(500).json({ message: "Erreur serveur" });
+  }
+});
+
+app.post('/api/tournaments', async (req, res) => {
+  const { name, description, participants } = req.body;
+
+  if (!name || !participants || participants.length < 2) {
+    return res.status(400).json({ error: 'Le nom du tournoi et au moins 2 participants sont requis.' });
+  }
+
+  try {
+    const newTournament = new Tournament({
+      name,
+      description: description || 'Un nouveau tournoi passionnant !',
+      participants,
+    });
+
+    await newTournament.save(); // Enregistre le tournoi dans MongoDB
+    res.status(201).json(newTournament);
+  } catch (error) {
+    console.error('Erreur lors de la création du tournoi :', error);
+    res.status(500).json({ error: 'Erreur serveur lors de la création du tournoi.' });
   }
 });
 

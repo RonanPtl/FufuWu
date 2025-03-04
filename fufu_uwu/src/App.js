@@ -4,6 +4,10 @@ import Home from './components/Home';
 import Tournament from './components/Tournament';
 import Duel from './components/Duel';
 import Winner from './components/Winner';
+import CreateTournament from './components/CreateTournament';
+import TournamentsList from './components/TournamentsList'; // Importez la nouvelle page
+
+
 
 function App() {
   return (
@@ -13,6 +17,8 @@ function App() {
         <Route path="/tournament/:id" element={<Tournament />} />
         <Route path="/duel/:duelId" element={<Duel />} />
         <Route path="/winner" element={<Winner />} />
+        <Route path="/create-tournament" element={<CreateTournament />} />
+        <Route path="/tournaments" element={<TournamentsList />} /> 
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

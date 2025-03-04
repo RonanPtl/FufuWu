@@ -1,0 +1,151 @@
+/* styles.css */
+
+/* Style global */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Conteneur principal */
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Titres */
+  h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  h2, h3, h4 {
+    color: #34495e;
+  }
+  
+  /* Boutons */
+  button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Liens */
+  a {
+    text-decoration: none;
+    color: #3498db;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Listes */
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    background-color: #ecf0f1;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Formulaire */
+  input[type="text"] {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  input[type="text"]:focus {
+    border-color: #3498db;
+    outline: none;
+  }
+  
+  /* Messages d'erreur */
+  .error {
+    color: #e74c3c;
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  /* Page d'accueil */
+  .home {
+    text-align: center;
+  }
+  
+  .home button {
+    margin: 10px;
+  }
+  
+  /* Page de création de tournoi */
+  .create-tournament {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .create-tournament label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+  }
+  
+  /* Page de liste des tournois */
+  .tournaments-list ul {
+    margin-top: 20px;
+  }
+  
+  .tournaments-list li {
+    background-color: #fff;
+    border: 1px solid #bdc3c7;
+    padding: 15px;
+    border-radius: 5px;
+  }
+  
+  .tournaments-list li:hover {
+    background-color: #f4f4f9;
+  }
+  
+  /* Page de duel */
+  .duel {
+    text-align: center;
+  }
+  
+  .duel button {
+    margin: 10px;
+  }
+  
+  /* Page du gagnant */
+  .winner {
+    text-align: center;
+  }
+  
+  .winner h1 {
+    color: #27ae60;
+  }
